@@ -1,4 +1,4 @@
-use pest_consume::{match_nodes, Error, Parser};
+use merc_pest_consume::{match_nodes, Error, Parser};
 
 #[derive(Debug)]
 enum CSVField<'a> {
@@ -9,13 +9,13 @@ type CSVRecord<'a> = Vec<CSVField<'a>>;
 type CSVFile<'a> = Vec<CSVRecord<'a>>;
 
 type Result<T> = std::result::Result<T, Error<Rule>>;
-type Node<'i> = pest_consume::Node<'i, Rule, ()>;
+type Node<'i> = merc_pest_consume::Node<'i, Rule, ()>;
 
 #[derive(Parser)]
 #[grammar = "../examples/csv/csv.pest"]
 pub struct CSVParser;
 
-#[pest_consume::parser]
+#[merc_pest_consume::parser]
 impl CSVParser {
     fn EOI(_input: Node) -> Result<()> {
         Ok(())

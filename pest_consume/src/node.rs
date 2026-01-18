@@ -1,8 +1,7 @@
 use crate::Parser;
+use pest::Parser as PestParser;
 use pest::error::{Error, ErrorVariant};
 use pest::iterators::{Pair, Pairs};
-use pest::prec_climber::PrecClimber;
-use pest::Parser as PestParser;
 use pest::{RuleType, Span};
 
 /// A node of the parse tree.
@@ -154,26 +153,6 @@ impl<'i, R: RuleType, D> Nodes<'i, R, D> {
         D: Clone,
     {
         Node::new_with_user_data(pair, self.user_data.clone())
-    }
-    /// Performs the precedence climbing algorithm on the nodes.
-    pub fn prec_climb<T, E, F1, F2>(
-        self,
-        climber: &PrecClimber<R>,
-        mut primary: F1,
-        mut infix: F2,
-    ) -> Result<T, E>
-    where
-        D: Clone,
-        F1: FnMut(Node<'i, R, D>) -> Result<T, E>,
-        F2: FnMut(T, Node<'i, R, D>, T) -> Result<T, E>,
-    {
-        let user_data = self.user_data;
-        let with_pair = |p| Node::new_with_user_data(p, user_data.clone());
-        climber.climb(
-            self.pairs,
-            |p| primary(with_pair(p)),
-            |l, p, r| infix(l?, with_pair(p), r?),
-        )
     }
 
     pub fn user_data(&self) -> &D {

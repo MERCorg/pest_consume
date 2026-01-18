@@ -185,4 +185,4 @@ mod node;
 mod parser;
 pub use node::{Node, Nodes};
 pub use parser::Parser;
-pub use pest_consume_macros::parser;
+pub use merc_pest_consume_macros::parser;

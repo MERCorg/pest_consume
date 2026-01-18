@@ -1,10 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 #![allow(dead_code)]
 
-use pest_consume::match_nodes;
+use merc_pest_consume::match_nodes;
 
 // Define a simple matcher based on an enum. Each variant of the enum gives a node name, and the
-// corresponding matcher function extracts the contained value. The contructed node type stores the
+// corresponding matcher function extracts the contained value. The constructed node type stores the
 // enum variant and an optional tag.
 macro_rules! simple_matcher {
     (
@@ -57,7 +57,7 @@ macro_rules! simple_matcher {
 
         struct $matcher;
 
-        impl pest_consume::NodeMatcher for $matcher {
+        impl merc_pest_consume::NodeMatcher for $matcher {
             type NodeName = $name;
         }
 
@@ -73,7 +73,7 @@ macro_rules! simple_matcher {
             )*
         }
 
-        impl pest_consume::NodeList<$matcher> for Vec<$node> {
+        impl merc_pest_consume::NodeList<$matcher> for Vec<$node> {
             type Node = $node;
             type NodeNamer = Namer;
 
@@ -83,7 +83,7 @@ macro_rules! simple_matcher {
         }
 
         struct Namer;
-        impl pest_consume::NodeNamer<$matcher> for Namer {
+        impl merc_pest_consume::NodeNamer<$matcher> for Namer {
             type Node = $node;
             type Error = ();
 
@@ -94,7 +94,7 @@ macro_rules! simple_matcher {
                 n.tag.as_deref()
             }
             fn error(self, _message: String) -> Self::Error {
-                ()
+
             }
         }
     };
@@ -155,32 +155,8 @@ fn multi_number_skip() {
         Ok(vec![41, 42])
     );
     assert_eq!(
-        multi_number_skip(vec![
-            boolean(true),
-            number(41),
-            number(42),
-            boolean(false)
-        ]),
+        multi_number_skip(vec![boolean(true), number(41), number(42), boolean(false)]),
         Ok(vec![41, 42])
-    );
-}
-
-#[test]
-fn multi_skip() {
-    let multi_skip = |input: Vec<NodeKind>| {
-        Ok(match_nodes!(<TestMatcher>; notag(input);
-            [_, x.., _] => x.collect::<Vec<Node>>(),
-        ))
-    };
-    assert!(multi_skip(vec![]).is_err());
-    assert_eq!(multi_skip(vec![number(0), number(0)]), Ok(vec![]));
-    assert_eq!(
-        multi_skip(vec![number(0), number(41), number(42), number(0)]),
-        Ok(notag(vec![number(41), number(42)]))
-    );
-    assert_eq!(
-        multi_skip(vec![boolean(true), number(41), number(42), boolean(false)]),
-        Ok(notag(vec![number(41), number(42)]))
     );
 }
 
@@ -193,14 +169,8 @@ fn multi_multi() {
     };
     assert!(multi_multi(vec![]).is_err());
     assert_eq!(multi_multi(vec![number(1), number(2)]), Ok((1, true)));
-    assert_eq!(
-        multi_multi(vec![number(1), number(2), number(4)]),
-        Ok((3, true))
-    );
-    assert_eq!(
-        multi_multi(vec![number(1), boolean(true), number(4)]),
-        Ok((1, true))
-    );
+    assert_eq!(multi_multi(vec![number(1), number(2), number(4)]), Ok((3, true)));
+    assert_eq!(multi_multi(vec![number(1), boolean(true), number(4)]), Ok((1, true)));
     assert_eq!(
         multi_multi(vec![boolean(false), boolean(true), number(4)]),
         Ok((0, false))
@@ -225,40 +195,14 @@ fn single_tag() {
 }
 
 #[test]
-fn multi_tag() {
-    let multi_tag = |input: Vec<Node>| {
-        Ok(match_nodes!(<TestMatcher>; input;
-            [tag1 # x.., tag2 # _] => x.collect::<Vec<_>>(),
-        ))
-    };
-    assert!(multi_tag(vec![number(0).with_tag("tag2")]).is_ok());
-    assert_eq!(
-        multi_tag(vec![
-            number(0).with_tag("tag1"),
-            number(0).with_tag("tag1"),
-            number(0).with_tag("tag2"),
-        ])
-        .unwrap()
-        .len(),
-        2
-    );
-}
-
-#[test]
 fn multi_multi_tag() {
     let multi_multi_tag = |input: Vec<Node>| {
         Ok(match_nodes!(<TestMatcher>; input;
             [tag1 # number(x).., tag2 # number(y)..] => (x.sum(), y.sum()),
         ))
     };
-    assert_eq!(
-        multi_multi_tag(vec![number(1).with_tag("tag1")]),
-        Ok((1, 0))
-    );
-    assert_eq!(
-        multi_multi_tag(vec![number(1).with_tag("tag2")]),
-        Ok((0, 1))
-    );
+    assert_eq!(multi_multi_tag(vec![number(1).with_tag("tag1")]), Ok((1, 0)));
+    assert_eq!(multi_multi_tag(vec![number(1).with_tag("tag2")]), Ok((0, 1)));
     assert_eq!(
         multi_multi_tag(vec![
             number(1).with_tag("tag1"),

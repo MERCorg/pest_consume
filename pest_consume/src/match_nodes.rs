@@ -15,7 +15,7 @@
 ///
 /// The macro takes an expression followed by `;`, followed by one or more branches separated by `,`.
 /// Each branch has the form `[$patterns] => $body`. The body is an arbitrary expression.
-/// The patterns are a comma-seperated list of either `$rule_name($binder)` or just `$binder`, each
+/// The patterns are a comma-separated list of either `$rule_name($binder)` or just `$binder`, each
 /// optionally followed by `..` to indicate a variable-length pattern.
 ///
 /// # How it works
@@ -122,7 +122,7 @@ macro_rules! match_nodes {
         $crate::match_nodes_!($($x)*)
     };
 }
-pub use pest_consume_macros::match_nodes as match_nodes_;
+pub use merc_pest_consume_macros::match_nodes as match_nodes_;
 
 // Reexport
 pub use itertools::Itertools;
@@ -184,10 +184,14 @@ where
     fn node_name(&self, n: &Self::Node) -> P::AliasedRule {
         n.as_aliased_rule::<P>()
     }
+
     fn tag<'a>(&self, n: &'a Self::Node) -> Option<&'a str> {
         n.as_pair().as_node_tag()
     }
+
     fn error(self, message: String) -> Self::Error {
+        // It is unclear to me how this works, but the reference actually allows us to call something from Node and removing it yields an error.
+        #[allow(clippy::needless_borrow)]
         (&self).error(message)
     }
 }
