@@ -1,3 +1,15 @@
+# Overview
+
+ > ⚠️ **important** This is an internal crate and is not intended for public use.
+
+These are vendored versions of the `pest_consume` crate and
+`pest_consume_macros`, used by the `MERC` toolset, since the original crate is
+not actively maintained. This version has been stripped of all features that are
+not used by us and we only intend to update its dependencies and fix any issues
+that arise from using it in our toolset.
+
+The original description is found below.
+
 # pest_consume
 
 **Important**: I do not actively maintain this anymore.
