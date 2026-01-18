@@ -1,5 +1,6 @@
 use merc_pest_consume::{match_nodes, Error, Parser};
 
+#[allow(dead_code)]
 #[derive(Debug)]
 enum CSVField<'a> {
     Number(f64),
@@ -29,7 +30,7 @@ impl CSVParser {
             .map_err(|e| input.error(e))
     }
 
-    fn string(input: Node) -> Result<&str> {
+    fn string(input: Node<'_>) -> Result<&str> {
         Ok(input.as_str())
     }
 
@@ -53,7 +54,7 @@ impl CSVParser {
     }
 }
 
-fn parse_csv(input_str: &str) -> Result<CSVFile> {
+fn parse_csv(input_str: &str) -> Result<CSVFile<'_>> {
     // Parse the input into `Nodes`
     let inputs = CSVParser::parse(Rule::file, input_str)?;
     // There should be a single root node in the parsed tree

@@ -1,6 +1,6 @@
-#![doc(html_root_url = "https://docs.rs/pest_consume/1.1.3")]
+#![doc(html_root_url = "https://docs.rs/merc_pest_consume/1.1.3")]
 
-//! `pest_consume` extends [pest] to make it easy to consume a pest parse tree.
+//! `merc_pest_consume` extends [pest] to make it easy to consume a pest parse tree.
 //!
 //! # Motivation
 //!
@@ -8,9 +8,9 @@
 //! by hand to extract the data that will be used by the rest of the application.
 //! This usually makes code that is error-prone, difficult to read, and often breaks when the grammar is updated.
 //!
-//! `pest_consume` strives to make this phase of parsing easier, cleaner, and more robust.
+//! `merc_pest_consume` strives to make this phase of parsing easier, cleaner, and more robust.
 //!
-//! Features of `pest_consume` include:
+//! Features of `merc_pest_consume` include:
 //! - strong types;
 //! - consume parse nodes using an intuitive syntax;
 //! - easy error handling;
@@ -29,7 +29,7 @@
 //! and the corresponding pest parser:
 //!
 //! ```no_run
-//! use pest_consume::Parser;
+//! use merc_pest_consume::Parser;
 //! // Construct the first half of the parser using pest as usual.
 //! #[derive(Parser)]
 //! #[grammar = "../examples/csv/csv.pest"]
@@ -37,17 +37,17 @@
 //! # fn main() {}
 //! ```
 //!
-//! To complete the parser, define an `impl` block with the `pest_consume::parser` attribute,
+//! To complete the parser, define an `impl` block with the `merc_pest_consume::parser` attribute,
 //! and for each (non-silent) rule of the grammar a method with the same name.
 //! Note how we chose an output type for each rule.
 //!
 //! ```ignore
-//! use pest_consume::Error;
+//! use merc_pest_consume::Error;
 //! type Result<T> = std::result::Result<T, Error<Rule>>;
-//! type Node<'i> = pest_consume::Node<'i, Rule, ()>;
+//! type Node<'i> = merc_pest_consume::Node<'i, Rule, ()>;
 //!
-//! // This is the other half of the parser, using pest_consume.
-//! #[pest_consume::parser]
+//! // This is the other half of the parser, using merc_pest_consume.
+//! #[merc_pest_consume::parser]
 //! impl CSVParser {
 //!     fn EOI(_input: Node) -> Result<()> {
 //!         Ok(())
@@ -103,7 +103,7 @@
 //! it will match zero or more children with the given rule, and provide an iterator with the result.
 //!
 //! ```ignore
-//! use pest_consume::match_nodes;
+//! use merc_pest_consume::match_nodes;
 //! ...
 //!     fn record(input: Node) -> Result<Vec<f64>> {
 //!         // Checks that the children all match the rule `field`, and captures
@@ -128,7 +128,7 @@
 //! corresponding [pest] types, respectively `Pair`, `Pairs` and `Parser`.
 //! If needed, the wrapped type can be accessed, but that should rarely be necessary.
 //!
-//! The [`pest_consume::parser`][`parser`] macro implements the [`Parser`] trait for your type, and enables
+//! The [`merc_pest_consume::parser`][`parser`] macro implements the [`Parser`] trait for your type, and enables
 //! some advanced features, like precedence climbing and rule aliasing.
 //! A lot of the magic actually happens in [`match_nodes!`]; see there for details.
 //!
@@ -169,7 +169,7 @@
 //! [`Parser`]: trait.Parser.html
 //! [`Parser::parse`]: trait.Parser.html#method.parse
 //! [pest]: https://pest.rs
-//! [examples]: https://github.com/Nadrieril/pest_consume/tree/master/pest_consume/examples
+//! [examples]: https://github.com/Nadrieril/merc_pest_consume/tree/master/merc_pest_consume/examples
 //! [dhall-rust-parser]: https://github.com/Nadrieril/dhall-rust/blob/4daead27eb65e3a38869924f0f3ed1f425de1b33/dhall_syntax/src/parser.rs
 
 pub use pest::error::Error;
