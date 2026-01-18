@@ -1,6 +1,21 @@
+[workspace.package]
+edition = "2024"
+repository = "https://github.com/MERCorg/pest_consume"
+
 [workspace]
+resolver = "3"
 members = [
     "pest_consume",
     "pest_consume_macros",
 ]
 
+[workspace.dependencies]
+quote = "1.0"
+proc-macro2  = "1.0"
+syn = { version = "2.0", features = ["full"] }
+
+itertools = "0.14"
+pest = "2.8"
+pest_derive = "2.8"
+
+merc_pest_consume_macros  = { version = "2.0.0", path = "pest_consume_macros" }
