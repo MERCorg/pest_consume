@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
 use quote::quote;
 use syn::Error;
@@ -107,13 +107,13 @@ impl Parse for AliasArgs {
 pub(crate) fn collect_aliases(
     imp: &mut ItemImpl,
     allow_aliasing: bool,
-) -> Result<HashMap<Ident, Vec<AliasSrc>>> {
+) -> Result<BTreeMap<Ident, Vec<AliasSrc>>> {
     let functions = imp.items.iter_mut().flat_map(|item| match item {
         ImplItem::Fn(m) => Some(m),
         _ => None,
     });
 
-    let mut alias_map = HashMap::new();
+    let mut alias_map = BTreeMap::new();
     for function in functions {
         let fn_name = function.sig.ident.clone();
         let mut alias_attrs = function
@@ -182,7 +182,7 @@ fn extract_ident_argument(input_arg: &FnArg) -> Result<Ident> {
 /// Parses a function to extract metadata for rule method processing.
 fn parse_fn<'a>(
     function: &'a mut ImplItemFn,
-    alias_map: &mut HashMap<Ident, Vec<AliasSrc>>,
+    alias_map: &mut BTreeMap<Ident, Vec<AliasSrc>>,
 ) -> Result<ParsedFn<'a>> {
     // Rule methods must have exactly one argument
     if function.sig.inputs.len() != 1 {
@@ -270,9 +270,9 @@ fn apply_special_attrs(f: &mut ParsedFn, rule_enum: &Path) -> Result<()> {
 pub(crate) fn process_methods(
     imp: &mut ItemImpl,
     rule_enum: &Path,
-    alias_map: &mut HashMap<Ident, Vec<AliasSrc>>,
+    alias_map: &mut BTreeMap<Ident, Vec<AliasSrc>>,
 ) -> Result<()> {
-    let fn_map: HashMap<Ident, ParsedFn> = imp
+    let fn_map: BTreeMap<Ident, ParsedFn> = imp
         .items
         .iter_mut()
         .flat_map(|item| match item {
