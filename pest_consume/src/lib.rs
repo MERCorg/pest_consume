@@ -183,6 +183,8 @@ pub mod advanced_features;
 
 mod node;
 mod parser;
+pub use merc_pest_consume_macros::declare_parser;
+pub use merc_pest_consume_macros::parser;
+pub use merc_pest_consume_macros::parser_methods;
 pub use node::{Node, Nodes};
 pub use parser::Parser;
-pub use merc_pest_consume_macros::parser;
