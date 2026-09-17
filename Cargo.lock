@@ -25,7 +25,7 @@ checksum = "cf8baf1c55e62ffcace7a9f06f4bd9cd3f0c4beb022d3b367256b91b87513d98"
 
 [[package]]
 name = "merc_pest_consume"
-version = "2.0.0"
+version = "2.1.0"
 dependencies = [
  "itertools",
  "merc_pest_consume_macros",
@@ -35,7 +35,7 @@ dependencies = [
 
 [[package]]
 name = "merc_pest_consume_macros"
-version = "2.0.0"
+version = "2.1.0"
 dependencies = [
  "proc-macro2",
  "quote",

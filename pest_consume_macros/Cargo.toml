@@ -1,6 +1,6 @@
 [package]
 name = "merc_pest_consume_macros"
-version = "2.0.0"
+version = "2.1.0"
 authors = ["Nadrieril <nadrieril@users.noreply.github.com>"]
 license = "MIT OR Apache-2.0"
 description = "Macros for pest_consume"
