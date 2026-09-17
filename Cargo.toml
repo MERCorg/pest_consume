@@ -1,6 +1,7 @@
 [workspace.package]
 edition = "2024"
 repository = "https://github.com/MERCorg/pest_consume"
+rustc-version = "1.90"
 
 [workspace]
 resolver = "3"

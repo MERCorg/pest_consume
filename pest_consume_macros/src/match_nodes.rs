@@ -39,7 +39,7 @@ struct Alternative {
 /// Represents a set of alternatives and their associated body expression.
 struct MatchBranch {
     alternatives: Punctuated<Alternative, token::Or>, // Alternatives separated by |
-    body: Expr,                                       // Body expression to evaluate on match
+    body: Expr, // Body expression to evaluate on match
 }
 
 /// Input for the match_nodes macro.
@@ -47,7 +47,7 @@ struct MatchBranch {
 /// Contains parser type, input expression, and pattern matching branches.
 struct MacroInput {
     parser: Type,                                    // Parser type
-    input_expr: Expr,                                // Expression to match against
+    input_expr: Expr, // Expression to match against
     branches: Punctuated<MatchBranch, token::Comma>, // Pattern matching branches
 }
 
@@ -206,7 +206,8 @@ fn make_alternative(
     parser: &Type,
 ) -> TokenStream {
     let i_nodes_iter = Ident::new("___nodes_iter", Span::call_site());
-    let name_enum = quote!(<#parser as ::merc_pest_consume::NodeMatcher>::NodeName);
+    let name_enum =
+        quote!(<#parser as ::merc_pest_consume::NodeMatcher>::NodeName);
     let node_namer_ty = quote!(<_ as ::merc_pest_consume::NodeNamer<#parser>>);
     let patterns: Vec<_> = alternative.patterns.into_iter().collect();
 
@@ -283,7 +284,10 @@ fn make_alternative(
         quote!(unreachable!()),
     );
 
-    debug_assert!(!patterns.is_empty(), "Alternative must have at least one pattern");
+    debug_assert!(
+        !patterns.is_empty(),
+        "Alternative must have at least one pattern"
+    );
 
     quote!(
         _ if {
@@ -302,7 +306,9 @@ fn make_alternative(
 }
 
 /// Implements the match_nodes macro.
-pub fn match_nodes(input: proc_macro::TokenStream) -> Result<proc_macro2::TokenStream> {
+pub fn match_nodes(
+    input: proc_macro::TokenStream,
+) -> Result<proc_macro2::TokenStream> {
     let input: MacroInput = syn::parse(input)?;
 
     let i_nodes = Ident::new("___nodes", input.input_expr.span());
@@ -320,9 +326,9 @@ pub fn match_nodes(input: proc_macro::TokenStream) -> Result<proc_macro2::TokenS
             let body = br.body;
             let i_nodes = &i_nodes;
             let i_node_namer = &i_node_namer;
-            br.alternatives
-                .into_iter()
-                .map(move |alt| make_alternative(alt, &body, i_nodes, i_node_namer, parser))
+            br.alternatives.into_iter().map(move |alt| {
+                make_alternative(alt, &body, i_nodes, i_node_namer, parser)
+            })
         })
         .collect::<Vec<_>>();
 

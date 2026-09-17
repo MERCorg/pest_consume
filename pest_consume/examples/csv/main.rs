@@ -1,4 +1,4 @@
-use merc_pest_consume::{match_nodes, Error, Parser};
+use merc_pest_consume::{Error, Parser, match_nodes};
 
 #[allow(dead_code)]
 #[derive(Debug)]
